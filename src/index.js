@@ -28,7 +28,7 @@ Array.prototype.select = function(callback) {
 };
 
 Array.prototype.offset = function(value) {
-  value = Math.min(this.length, Math.max(0, parseInt(value) || 0));
+  value = Math.min(this.length - 1, Math.max(0, parseInt(value) || 0));
   return this.slice(value);
 };
 
