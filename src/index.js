@@ -11,19 +11,30 @@ Object.prototype.endWith = function(search) {
 };
 
 Array.prototype.map = function(callback) {
-  for (var key in this) this.hasOwnProperty(key) && callback(key, this[key]);
+  for (var key in this) {
+    if (this.hasOwnProperty(key)) {
+      var newValue = callback(this[key], key, this);
+      if ([undefined, null].indexOf(newValue) === -1) {
+        this[key] = newValue;
+      }
+    }
+  }
   return this;
 };
 
 Array.prototype.reduce = function(callback, startValue) {
   let accumulator = startValue || 0;
-  this.map((key, value) => accumulator = callback(accumulator, this[key]));
+  this.map((value, key, array) => {
+    accumulator = callback(accumulator, this[key]);
+  });
   return accumulator;
 };
 
 Array.prototype.select = function(callback) {
   let response = [];
-  this.map((key, value) => response.push(callback(value)));
+  this.map((value, key, array) => {
+    response.push(callback(value));
+  });
   return response;
 };
 
@@ -39,7 +50,9 @@ Array.prototype.limit = function(value) {
 
 Array.prototype.where = function(callback) {
   let response = [];
-  this.map((key, value) => callback(value) && response.push(value));
+  this.map((value, key, array) => {
+    callback(value) && response.push(value);
+  });
   return response;
 };
 
@@ -64,7 +77,7 @@ Array.prototype.orderBy = function(callback) {
 Array.prototype.groupBy = function(callback) {
   let helper = {};
   let response = [];
-  this.map((key, value) => {
+  this.map((value, key, array) => {
     var id = callback(value);
     if (!helper[id]) {
       helper[id] = response.length;
