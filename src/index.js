@@ -27,12 +27,14 @@ Array.prototype.select = function(callback) {
   return response;
 };
 
-Array.prototype.limit = function(from, limit) {
-  let response = [];
-  from = from || 0;
-  limit = limit || this.length;
-  this.map((key, value) => key + 1 >= from && response.length < limit && response.push(value));
-  return response;
+Array.prototype.offset = function(value) {
+  value = Math.min(this.length, Math.max(0, parseInt(value) || 0));
+  return this.slice(value);
+};
+
+Array.prototype.limit = function(value) {
+  value = Math.min(this.length, Math.max(1, parseInt(value) || 1));
+  return this.slice(0, value);
 };
 
 Array.prototype.where = function(callback) {
