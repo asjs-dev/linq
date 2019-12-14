@@ -3,14 +3,14 @@
 Try it: https://codepen.io/iroshan/pen/LYENvVZ
 
 **Functions**
-- *select(value => value /* object */)* /* return the selected object */
-- *where(value => value /* consition */)* /* filter the source by the condition */
-- *orderBy(value => value /* object */)* /* sort the source by the object */
+- *select(value => value)* /* return the selected object */
+- *where(value => value)* /* filter the source by the condition */
+- *orderBy(value => value)* /* sort the source by the object */
   - *asc()*
   - *desc()*
-- *groupBy(value => value /* object */)* /* group the source values by the object */
-- *offset(int /* offset between 0 and (source.length - 1) */)*
-- *limit(int /* limit between 1 and source.length */)*
+- *groupBy(value => value)* /* group the source values by the object */
+- *offset(int)* /* offset between 0 and (source.length - 1) */
+- *limit(int)* /* limit between 1 and source.length */
 - *first()* /* first element from source */
 - *last()* /* last element from source */
 - *map((value, key, array) => value)*
