@@ -1,3 +1,7 @@
+Math.sign = Math.sign || function(x) {
+  return ((x > 0) - (x < 0)) || +x;
+};
+
 Object.prototype.isIn = function(array) {
   return array.indexOf(this.valueOf()) > -1;
 };
@@ -10,10 +14,10 @@ Object.prototype.endWith = function(search) {
   return this.indexOf(search) === (this.length - search.length);
 };
 
-Array.prototype.map = function(callback) {
-  for (var key in this) {
+Object.prototype.map = function(callback) {
+  for (let key in this) {
     if (this.hasOwnProperty(key)) {
-      var newValue = callback(this[key], key, this);
+      let newValue = callback(this[key], key, this);
       if ([undefined, null].indexOf(newValue) === -1) {
         this[key] = newValue;
       }
@@ -22,12 +26,28 @@ Array.prototype.map = function(callback) {
   return this;
 };
 
-Array.prototype.reduce = function(callback, startValue) {
-  let accumulator = startValue || 0;
-  this.map((value, key, array) => {
-    accumulator = callback(accumulator, this[key]);
-  });
-  return accumulator;
+Array.prototype.has = function(item) {
+  return this.indexOf(item) > -1;
+}
+
+Array.prototype.insert = function(item, index) {
+  index = index === undefined || index < 0 || index > this.length ? this.length : index;
+  this.splice(index, 0, item);
+  return this;
+}
+
+Array.prototype.remove = function(item) {
+  let index = this.indexOf(item);
+  index > -1 && this.splice(index, 1);
+  return this;
+}
+
+Array.prototype.reduce = function(callback, startValue) {	
+  let accumulator = startValue || 0;	
+  this.map((value, key, array) => {	
+    accumulator = callback(accumulator, this[key]);	
+  });	
+  return accumulator;	
 };
 
 Array.prototype.select = function(callback) {
@@ -57,17 +77,7 @@ Array.prototype.where = function(callback) {
 };
 
 Array.prototype.orderBy = function(callback) {
-  function sort(sign, callback) {
-    return this.sort((a, b) => {
-      const aValue = callback(a);
-      const bValue = callback(b);
-
-      if (aValue > bValue) return sign;
-      if (aValue < bValue) return -sign;
-      return 0;
-    });
-  };
-  
+  const sort = (sign, callback) => this.sort((a, b) => Math.sign(callback(a) - callback(b)) * sign);
   return {
     asc: sort.bind(this, 1, callback),
     desc: sort.bind(this, -1, callback)
@@ -78,7 +88,7 @@ Array.prototype.groupBy = function(callback) {
   let helper = {};
   let response = [];
   this.map((value, key, array) => {
-    var id = callback(value);
+    let id = callback(value);
     if (!helper[id]) {
       helper[id] = response.length;
       response.push([]);
